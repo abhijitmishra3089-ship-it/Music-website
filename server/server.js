@@ -3,8 +3,10 @@ import "dotenv/config";
 import express from "express";
 import connectDb from "./config/db.js";
 import UserRegistar from "./routes/auth.routes.js";
+import connectRedis from './config/redis.js'
 const app = express();
 app.use(express.json());
+await connectRedis();
 app.get("/health", (req, res) => {
   res.status(200).json({
     success: true,
