@@ -1,0 +1,16 @@
+# Production readiness checklist
+- [ ] Supported Node.js LTS, lockfile committed, dependencies audited.
+- [ ] Secrets stored outside Git and rotated when needed.
+- [ ] MongoDB replica set, auth/TLS, backups and restore drill.
+- [ ] Redis auth/TLS, memory policy, monitoring and queue durability strategy.
+- [ ] Email verification, password reset, refresh-token rotation/revocation.
+- [ ] CSRF protection for cookie-authenticated write routes as applicable.
+- [ ] Exact trusted proxy configuration and correct client IP handling.
+- [ ] Artist/admin authorization, ownership checks, moderation and licensing.
+- [ ] Cloudinary account limits, authenticated audio delivery, validated upload pipeline, file-size/type validation and malware scanning.
+- [ ] CDN signed access, Range support and bandwidth/abuse controls.
+- [ ] Structured log redaction, metrics, alerts and error tracking.
+- [ ] Integration tests for auth, ownership, cache, rate limits and queue failures.
+- [ ] Staging load test with realistic traffic mix and separate load generator.
+- [ ] Monitor p95/p99, errors, CPU, memory, DB pools, Redis, queue lag and CDN.
+- [ ] Test graceful shutdown, rolling deployment, rollback and data restoration.
