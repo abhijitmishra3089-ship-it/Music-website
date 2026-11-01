@@ -6,4 +6,10 @@ export const redis = new Redis(env.REDIS_URL, {
   enableReadyCheck: true,
   retryStrategy(times) { return Math.min(times * 200, 2000); }
 });
-redis.on("error", error => console.error("Redis connection error:", error.message));
+redis.on("connect", () => {
+    console.log("Redis connected successfully");
+});
+
+redis.on("error", (error) => {
+    console.error("Redis connection error:", error.message);
+});

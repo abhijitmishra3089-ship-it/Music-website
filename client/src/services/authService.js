@@ -14,9 +14,18 @@ export async function loginUser(credentials) {
 
 // Get logged-in user
 export async function getCurrentUser() {
-  const { data } = await api.get("/auth/me");
-  return data?.user ?? data;
+  try {
+    const { data } = await api.get("/auth/me");
+    return data?.user ?? data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      return null;
+    }
+
+    throw error;
+  }
 }
+
 
 // Logout user
 export async function logoutUser() {

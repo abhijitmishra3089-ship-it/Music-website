@@ -7,7 +7,7 @@ const cookieOptions = {
   secure: env.COOKIE_SECURE === "true",
   sameSite: env.COOKIE_SAME_SITE,
   path: "/",
-  maxAge: 15 * 60 * 1000
+  maxAge: 30 * 24 * 60 * 60 * 1000
 };
 
 export async function signupController(req, res) {

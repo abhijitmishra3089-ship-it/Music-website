@@ -1,10 +1,7 @@
-
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-// Layout
 import MainLayout from "./layouts/MainLayout";
 
-// Pages
 import Home from "./pages/Home";
 import Explore from "./pages/Explore";
 import Search from "./pages/Search";
@@ -15,25 +12,20 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 
-// Context
 import { AuthProvider } from "./context/AuthContext";
 import { PlayerProvider } from "./context/PlayerContext";
 
-// Components
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <AuthProvider>
-      <PlayerProvider>
-        <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <PlayerProvider>
           <Routes>
-
-            {/* Public Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
 
-            {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
               <Route element={<MainLayout />}>
                 <Route path="/" element={<Home />} />
@@ -49,13 +41,11 @@ function App() {
               </Route>
             </Route>
 
-            {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
-
           </Routes>
-        </BrowserRouter>
-      </PlayerProvider>
-    </AuthProvider>
+        </PlayerProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

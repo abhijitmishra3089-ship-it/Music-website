@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 import { usePlayer } from "../hooks/usePlayer";
-import { formetTime } from "../utils/formetTime";
+import { formetTime as formatTime } from "../utils/formetTime";
 
 export default function Player() {
   const audioRef = useRef(null);
