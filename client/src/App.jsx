@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import MainLayout from "./layouts/MainLayout";
-
+import UploadSong from "./pages/UploadSong";
 import Home from "./pages/Home";
 import Explore from "./pages/Explore";
 import Search from "./pages/Search";
@@ -38,6 +38,7 @@ function App() {
                   element={<PlaylistDetails />}
                 />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/upload-song" element={<UploadSong />} />
               </Route>
             </Route>
 

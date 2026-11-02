@@ -2,7 +2,85 @@ import mongoose from "mongoose";
 import Song from "../../models/Song.js";
 import { createPlaybackUrl } from "../../services/storage.service.js";
 import { playHistoryQueue } from "../../queues/playHistory.queue.js";
+import fs from "node:fs/promises";
+import {
+  uploadAudioFile,
+  uploadCoverFile,
+  deleteAudioAsset,
+  deleteCoverAsset
+} from "../../services/storage.service.js";
 
+export async function uploadSong({
+  title,
+  artistName,
+  albumName = "",
+  audioFile,
+  coverFile,
+  userId
+}) {
+  if (!audioFile || !coverFile) {
+    const error = new Error("Audio and cover image are required");
+    error.status = 400;
+    throw error;
+  }
+
+  let audioAsset;
+  let coverAsset;
+  let savedSong;
+
+  try {
+    audioAsset = await uploadAudioFile(audioFile.path);
+
+    coverAsset = await uploadCoverFile(coverFile.path);
+
+    savedSong = await Song.create({
+      title,
+      artistName,
+      albumName,
+      durationSeconds: Math.round(audioAsset.durationSeconds || 0),
+      storageKey: audioAsset.publicId,
+      audioFormat: audioAsset.format || "mp3",
+      coverKey: coverAsset.publicId,
+      isPublished: true,
+      uploadedBy: userId
+    });
+
+    return {
+      id: String(savedSong._id),
+      title: savedSong.title,
+      artistName: savedSong.artistName,
+      albumName: savedSong.albumName,
+      durationSeconds: savedSong.durationSeconds,
+      coverKey: savedSong.coverKey,
+      isPublished: savedSong.isPublished
+    };
+  } catch (error) {
+    // Database save fail ho to uploaded Cloudinary assets clean up karo.
+    if (savedSong) {
+      await Song.deleteOne({ _id: savedSong._id }).catch(() => {});
+    }
+
+    if (coverAsset?.publicId) {
+      await deleteCoverAsset(coverAsset.publicId).catch(() => {});
+    }
+
+    if (audioAsset?.publicId) {
+      await deleteAudioAsset(audioAsset.publicId).catch(() => {});
+    }
+
+    throw error;
+  } finally {
+    await Promise.allSettled([
+      audioFile?.path
+        ? fs.unlink(audioFile.path)
+        : Promise.resolve(),
+
+      coverFile?.path
+        ? fs.unlink(coverFile.path)
+        : Promise.resolve()
+    ]);
+  }
+}
 export async function listSongs({ limit, cursor }) {
   const filter = { isPublished: true };
   if (cursor) {

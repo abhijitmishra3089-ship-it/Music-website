@@ -11,3 +11,8 @@ export const historySchema = z.object({
   durationPlayed: z.number().min(0).max(86400),
   playedAt: z.coerce.date().optional()
 }).strict();
+export const uploadSongSchema = z.object({
+  title: z.string().trim().min(1).max(150),
+  artistName: z.string().trim().min(1).max(120),
+  albumName: z.string().trim().max(150).optional().default("")
+}).strict();
